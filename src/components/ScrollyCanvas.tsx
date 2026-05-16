@@ -27,31 +27,22 @@ export default function ScrollyCanvas() {
     firstImg.onload = () => {
       renderFrame(0);
       
-      // Once the first frame is visible, start loading the rest sequentially
-      // to prevent overwhelming mobile browsers (Safari limits & memory crashing)
-      let currentLoadIndex = 1;
-      
-      const loadNext = () => {
-        if (currentLoadIndex >= frameCount) return;
-        
-        const img = images[currentLoadIndex];
-        const num = (currentLoadIndex + 1).toString().padStart(3, "0");
-        img.src = `/sequence/ezgif-frame-${num}.png`;
-        img.decoding = "async";
-        
-        img.onload = () => {
-          currentLoadIndex++;
-          loadNext();
-        };
-        
-        // Fallback in case of error
-        img.onerror = () => {
-          currentLoadIndex++;
-          loadNext();
-        };
-      };
-      
-      loadNext();
+      // Load all other frames concurrently but staggered so we don't freeze the browser
+      for (let i = 1; i < frameCount; i++) {
+        setTimeout(() => {
+          const img = images[i];
+          const num = (i + 1).toString().padStart(3, "0");
+          img.src = `/sequence/ezgif-frame-${num}.png`;
+          img.decoding = "async";
+          
+          // Whenever an image finishes loading, if the user is currently 
+          // resting on this frame but it was blurry/fallback, re-render it
+          img.onload = () => {
+             // We can optionally trigger a re-render here if needed, 
+             // but motion value event handles scroll changes.
+          };
+        }, i * 10); // Stagger network requests slightly
+      }
     };
   }, []);
 
@@ -61,8 +52,24 @@ export default function ScrollyCanvas() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const img = imagesRef.current[index];
-    if (!img || !img.complete) return;
+    let validIndex = index;
+    // Fallback: If the exact frame hasn't downloaded yet, find the closest loaded frame!
+    if (!imagesRef.current[validIndex] || !imagesRef.current[validIndex].complete) {
+      let found = false;
+      for (let i = 1; i < frameCount; i++) {
+         if (validIndex - i >= 0 && imagesRef.current[validIndex - i]?.complete) {
+            validIndex = validIndex - i;
+            found = true; break;
+         }
+         if (validIndex + i < frameCount && imagesRef.current[validIndex + i]?.complete) {
+            validIndex = validIndex + i;
+            found = true; break;
+         }
+      }
+      if (!found) return; // Nothing is loaded yet
+    }
+
+    const img = imagesRef.current[validIndex];
 
     // Handle object-fit: cover logic
     const canvasRatio = canvas.width / canvas.height;
