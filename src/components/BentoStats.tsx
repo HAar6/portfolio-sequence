@@ -7,12 +7,12 @@ export default function BentoStats() {
 
   return (
     <section className="min-h-screen px-6 md:px-12 lg:px-24 flex items-center relative overflow-hidden py-24 z-10">
-      
+
       <div className="w-full max-w-[1200px] mx-auto relative z-10">
         <h3 className="text-4xl md:text-5xl font-bold mb-12 tracking-tight text-white drop-shadow-md">At a Glance</h3>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          
+
           {/* Main Large Card - AI/Data Science Focus */}
           <div className={`${glassCard} md:col-span-2 flex flex-col justify-center`}>
             <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
@@ -48,7 +48,7 @@ export default function BentoStats() {
           </div>
 
           {/* Bottom Left Card - GitHub */}
-          <a href="https://github.com/harshityadav17" target="_blank" rel="noopener noreferrer" className={`${glassCard} flex flex-col justify-center`}>
+          <a href="https://github.com/HAar6" target="_blank" rel="noopener noreferrer" className={`${glassCard} flex flex-col justify-center`}>
             <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
             <div className="relative z-10">
               <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-4 shadow-inner">
