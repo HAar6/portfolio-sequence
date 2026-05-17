@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+
 const client_id = process.env.SPOTIFY_CLIENT_ID;
 const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 const refresh_token = process.env.SPOTIFY_REFRESH_TOKEN;
@@ -36,41 +37,44 @@ export const fetchNowPlaying = async () => {
 
 export async function GET() {
   if (!client_id || !client_secret || !refresh_token) {
-    return NextResponse.json({ isPlaying: false, error: "Missing Spotify API keys" });
+    return NextResponse.json({
+      error: "Missing Spotify API keys",
+    });
   }
 
   try {
-    const response = await fetchNowPlaying();
+    const tokenData = await getAccessToken();
 
-    if (response.status === 204 || response.status > 400) {
-      return NextResponse.json({ isPlaying: false });
+    if (!tokenData.access_token) {
+      return NextResponse.json({
+        message: "Access token not generated",
+        tokenResponse: tokenData,
+      });
     }
 
-    const song = await response.json();
+    const response = await fetch(NOW_PLAYING_ENDPOINT, {
+      headers: {
+        Authorization: `Bearer ${tokenData.access_token}`,
+      },
+      cache: "no-store",
+    });
 
-    if (song.item === null) {
-      return NextResponse.json({ isPlaying: false });
+    if (response.status === 204) {
+      return NextResponse.json({
+        status: 204,
+        message: "No song currently playing",
+      });
     }
 
-    const isPlaying = song.is_playing;
-    const title = song.item.name;
-    const artist = song.item.artists.map((_artist: any) => _artist.name).join(", ");
-    const album = song.item.album.name;
-    const albumImageUrl = song.item.album.images[0].url;
-    const songUrl = song.item.external_urls.spotify;
-    const previewUrl = song.item.preview_url;
+    const spotifyData = await response.json();
 
     return NextResponse.json({
-      album,
-      albumImageUrl,
-      artist,
-      isPlaying,
-      songUrl,
-      title,
-      previewUrl,
+      status: response.status,
+      spotifyResponse: spotifyData,
     });
   } catch (error) {
-    console.error("Error fetching Spotify data:", error);
-    return NextResponse.json({ isPlaying: false });
+    return NextResponse.json({
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
   }
 }
