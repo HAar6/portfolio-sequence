@@ -1,6 +1,6 @@
-const client_id = "e7c42f9313804babb0f98b6fe37f166c";
-const client_secret = "126cc8df6b304ba4862cacfe25962c75";
-const code = "AQDBKAnPTZiRfbuYV4lBKp7PqqWjQ_Hmt23NBs-B_aOywAQ3Jzf3DGrVveLBrpaPHoSX6W97Hg-PeXf1IinfcmGRMP_C3VsB8tzjBuAEYwLWppZ99WCxzSc2yHY154KhH-MxP6a2MoQySxO_pcVxHw3J6hDI80chTLMXx3IvJb6jbu-f9k_FIhD0uiW2vWfntJGGsXg"
+const client_id = "YOUR_SPOTIFY_CLIENT_ID";
+const client_secret = "YOUR_SPOTIFY_CLIENT_SECRET";
+const code = "YOUR_SPOTIFY_AUTHORIZATION_CODE";
 
 // Don't change anything below this line
 const basic = Buffer.from(`${client_id}:${client_secret}`).toString("base64");
