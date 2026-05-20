@@ -8,21 +8,25 @@ export default function Projects() {
 
   const projects = [
     {
+      title: "Personal Portfolio",
+      category: "Web Application",
+      image: "/sequence/ezgif-frame-001.png",
+      link: "https://haar6.vercel.app/"
+    },
+    {
+      title: "Cardiovascular Disease Risk Predictor",
+      category: "Machine Learning",
+      image: "/HDP.png",
+      link: "https://cvdpred.streamlit.app/",
+    },
+
+    {
       title: "Money MAP",
       category: "Expense Dashboard",
       image: "/money-map.jpg",
       link: "https://expensetrackerfrontend-oled.onrender.com",
-    },
-    {
-      title: "Personal Portfolio",
-      category: "Web Application",
-      image: "/sequence/ezgif-frame-001.png",
-    },
-    {
-      title: "MenuCraft",
-      category: "Food Menu Website",
-      image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=800&auto=format&fit=crop",
-    },
+    }
+
   ];
 
   const visibleProjects = showAll ? projects : projects.slice(0, 2);
@@ -36,16 +40,16 @@ export default function Projects() {
           {visibleProjects.map((project, idx) => {
             const content = (
               <>
-                <div className="aspect-[4/3] overflow-hidden">
+                <div className="aspect-[4/3] w-full overflow-hidden bg-black/40 flex items-center justify-center p-4 md:p-6 border-b border-white/10">
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
-                <div className="p-8 absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent">
-                  <p className="text-sm text-neutral-400 mb-2">{project.category}</p>
-                  <h4 className="text-2xl font-semibold">{project.title}</h4>
+                <div className="p-6 md:p-8">
+                  <p className="text-sm text-indigo-400 font-medium mb-2 uppercase tracking-wider">{project.category}</p>
+                  <h4 className="text-xl md:text-2xl font-semibold text-white group-hover:text-indigo-300 transition-colors duration-300">{project.title}</h4>
                 </div>
               </>
             );
@@ -72,7 +76,7 @@ export default function Projects() {
 
         {!showAll && projects.length > 2 && (
           <div className="flex justify-center pb-12">
-            <button 
+            <button
               onClick={() => setShowAll(true)}
               className="relative group overflow-hidden rounded-full bg-zinc-900 px-8 py-4 border border-zinc-800 transition-all hover:border-zinc-700 block cursor-pointer"
             >
